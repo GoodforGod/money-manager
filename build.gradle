@@ -14,5 +14,5 @@ dependencies {
 
     compile 'com.google.inject:guice:4.2.2'
     compile 'com.sparkjava:spark-core:2.8.0'
-    compile 'org.jooq:jooq:3.11.7'
+    compile 'com.google.code.gson:gson:2.8.5'
 }

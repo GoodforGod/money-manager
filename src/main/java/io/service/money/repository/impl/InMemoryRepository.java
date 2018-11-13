@@ -1,6 +1,5 @@
 package io.service.money.repository.impl;
 
-import io.service.money.model.dao.BaseModel;
 import io.service.money.repository.IRepository;
 
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
  * @author GoodforGod
  * @since 13.11.2018
  */
-abstract class InMemoryRepository<T extends BaseModel<ID>, ID> implements IRepository<T, ID> {
+abstract class InMemoryRepository<T, ID> implements IRepository<T, ID> {
 
     final Map<ID, T> memory = new ConcurrentHashMap<>();
 
@@ -31,19 +30,9 @@ abstract class InMemoryRepository<T extends BaseModel<ID>, ID> implements IRepos
     }
 
     @Override
-    public T save(T t) {
-        memory.put(t.getId(), t);
+    public T save(ID id, T t) {
+        memory.put(id, t);
         return t;
-    }
-
-    @Override
-    public List<T> save(List<T> list) {
-        return null;
-    }
-
-    @Override
-    public T delete(T t) {
-        return memory.remove(t.getId());
     }
 
     @Override

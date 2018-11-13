@@ -1,6 +1,6 @@
 package io.service.money.repository.impl;
 
-import io.service.money.model.dao.Account;
+import io.service.money.model.dao.Transfer;
 
 /**
  * ! NO DESCRIPTION !
@@ -8,6 +8,6 @@ import io.service.money.model.dao.Account;
  * @author GoodforGod
  * @since 13.11.2018
  */
-public class Accountrepository extends InMemoryRepository<Account, String> {
+public class TransferRepository extends InMemoryRepository<Transfer, String> {
 
 }
