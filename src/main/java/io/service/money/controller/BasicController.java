@@ -1,10 +1,13 @@
 package io.service.money.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import io.javalin.Context;
 import io.service.money.model.ParseBox;
 import io.service.money.model.dto.RestResponse;
 import io.service.money.util.BasicUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ! NO DESCRIPTION !
@@ -14,10 +17,17 @@ import io.service.money.util.BasicUtils;
  */
 public abstract class BasicController {
 
+    final Logger logger = LoggerFactory.getLogger(BasicController.class);
+
     private Gson gson = new Gson();
 
     <T> T convert(String json, Class<T> tClass) {
-        return gson.fromJson(json, tClass);
+        try {
+            return gson.fromJson(json, tClass);
+        } catch (JsonSyntaxException e) {
+            logger.warn(e.getMessage());
+            return null;
+        }
     }
 
     <T> String convert(T t) {
@@ -39,5 +49,4 @@ public abstract class BasicController {
                 : ParseBox.valid(param);
     }
 
-    abstract public void handle();
 }

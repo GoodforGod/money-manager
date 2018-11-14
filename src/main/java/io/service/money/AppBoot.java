@@ -3,8 +3,10 @@ package io.service.money;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.javalin.Javalin;
-import io.service.money.controller.AccountController;
-import io.service.money.controller.TransferController;
+import io.service.money.controller.routing.IRouting;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * ! NO DESCRIPTION !
@@ -15,13 +17,14 @@ import io.service.money.controller.TransferController;
 @Singleton
 public class AppBoot {
 
-    @Inject private TransferController transferController;
-    @Inject private AccountController accountController;
-    @Inject private Javalin javalin;
+    @Inject
+    private Javalin javalin;
+
+    @Inject(optional = true)
+    private Set<IRouting> routes = Collections.emptySet();
 
     public void boot(String[] args) {
-        transferController.handle();
-        accountController.handle();
+        routes.forEach(IRouting::handle);
         javalin.port(8080).start();
     }
 }
