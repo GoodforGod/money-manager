@@ -6,6 +6,9 @@ import io.service.money.model.dao.Transfer;
 import io.service.money.repository.impl.TransferRepository;
 import io.service.money.storage.ITransferStorage;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * ! NO DESCRIPTION !
  *
@@ -18,5 +21,19 @@ public class TransferStorage extends BasicStorage<Transfer, String> implements I
     @Inject
     public TransferStorage(TransferRepository repository) {
         super(repository);
+    }
+
+    @Override
+    public List<Transfer> findBySender(String accountId) {
+        return findAll().stream()
+                .filter(t -> t.getFromAccountID().equals(accountId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Transfer> findByRecipient(String accountId) {
+        return findAll().stream()
+                .filter(t -> t.getToAccountID().equals(accountId))
+                .collect(Collectors.toList());
     }
 }

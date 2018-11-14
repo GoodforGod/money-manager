@@ -102,6 +102,48 @@ public class TransferStorageTests extends Assert {
     }
 
     @Test
+    public void findAllByRecipient() {
+        Transfer transfer1 = new Transfer(50, "1", "2");
+        Transfer transfer2 = new Transfer(50, "1", "4");
+        Transfer transfer3 = new Transfer(500, "3", "4");
+        Optional<Transfer> saved1 = storage.save(transfer1);
+        Optional<Transfer> saved2 = storage.save(transfer2);
+        Optional<Transfer> saved3 = storage.save(transfer3);
+        assertNotNull(saved1);
+        assertTrue(saved1.isPresent());
+        assertNotNull(saved2);
+        assertTrue(saved2.isPresent());
+        assertNotNull(saved3);
+        assertTrue(saved3.isPresent());
+
+        List<Transfer> bySender = storage.findByRecipient("4");
+        assertNotNull(bySender);
+        assertFalse(bySender.isEmpty());
+        assertEquals(2, bySender.size());
+    }
+
+    @Test
+    public void findAllBySender() {
+        Transfer transfer1 = new Transfer(50, "1", "2");
+        Transfer transfer2 = new Transfer(50, "1", "4");
+        Transfer transfer3 = new Transfer(500, "3", "4");
+        Optional<Transfer> saved1 = storage.save(transfer1);
+        Optional<Transfer> saved2 = storage.save(transfer2);
+        Optional<Transfer> saved3 = storage.save(transfer3);
+        assertNotNull(saved1);
+        assertTrue(saved1.isPresent());
+        assertNotNull(saved2);
+        assertTrue(saved2.isPresent());
+        assertNotNull(saved3);
+        assertTrue(saved3.isPresent());
+
+        List<Transfer> bySender = storage.findBySender("1");
+        assertNotNull(bySender);
+        assertFalse(bySender.isEmpty());
+        assertEquals(2, bySender.size());
+    }
+
+    @Test
     public void findAllNonExist() {
         List<Transfer> all = storage.findAll();
         assertNotNull(all);

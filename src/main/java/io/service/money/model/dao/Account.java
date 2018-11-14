@@ -35,7 +35,7 @@ public class Account extends BaseModel<String> {
     }
 
     public BigInteger accept(Transfer transfer) {
-        return balance.add(BigInteger.valueOf(transfer.getAmount()));
+        return this.balance = balance.add(BigInteger.valueOf(transfer.getAmount()));
     }
 
     public Optional<Transfer> transfer(long value, String toAccountID) {
