@@ -23,4 +23,5 @@ public interface IStorage<T extends BaseModel<ID>, ID> {
 
     Optional<T> delete(T t);
     Optional<T> deleteById(ID id);
+    void deleteAll();
 }

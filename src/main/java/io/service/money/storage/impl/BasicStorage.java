@@ -75,4 +75,9 @@ abstract class BasicStorage<T extends BaseModel<ID>, ID> implements IStorage<T, 
     public Optional<T> deleteById(ID id) {
         return Optional.ofNullable(repository.deleteById(id));
     }
+
+    @Override
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }

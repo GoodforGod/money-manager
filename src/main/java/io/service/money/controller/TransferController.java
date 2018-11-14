@@ -36,7 +36,7 @@ public class TransferController extends BasicController {
                 : validResponse(transfer.get());
     }
 
-    public CompletableFuture<String> performTransfer(Context context) {
+    public CompletableFuture<String> computeTransfer(Context context) {
         final ParseBox parseBoxAmount = getPathParam("amount", context);
         final ParseBox parseBoxFromID = getPathParam("fromAccountID", context);
         final ParseBox parseBoxToID = getPathParam("toAccountID", context);

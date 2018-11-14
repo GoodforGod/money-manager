@@ -14,7 +14,7 @@ import io.service.money.storage.impl.TransferStorage;
  * @author GoodforGod
  * @since 14.11.2018
  */
-public class BindConfig extends AbstractModule {
+public class ServiceBindConfig extends AbstractModule {
 
     @Override
     protected void configure() {

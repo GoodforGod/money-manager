@@ -2,7 +2,7 @@ package io.service.money;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import io.service.money.config.BindConfig;
+import io.service.money.config.ServiceBindConfig;
 
 /**
  * ! NO DESCRIPTION !
@@ -12,7 +12,7 @@ import io.service.money.config.BindConfig;
  */
 public class AppStarter {
     public static void main(String[] args) {
-        Injector injector = Guice.createInjector(new BindConfig());
+        Injector injector = Guice.createInjector(new ServiceBindConfig());
         injector.getInstance(AppBoot.class).boot(args);
     }
 }

@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public class Account extends BaseModel<String> {
 
-    private final BigInteger balance;
+    private BigInteger balance;
 
     public Account() {
         this(BigInteger.valueOf(0));
@@ -24,6 +24,7 @@ public class Account extends BaseModel<String> {
 
     public Account(BigInteger initialBalance) {
         super(UUID.randomUUID().toString());
+
         this.balance = (initialBalance.compareTo(BigInteger.valueOf(0)) > 0)
                 ? initialBalance
                 : BigInteger.valueOf(0);
@@ -41,10 +42,8 @@ public class Account extends BaseModel<String> {
         if (balance.longValue() < value)
             return Optional.empty();
 
-        final Transfer transfer = new Transfer(balance.subtract(BigInteger.valueOf(value)).longValue(),
-                this.id,
-                toAccountID);
-
+        this.balance = balance.subtract(BigInteger.valueOf(value));
+        final Transfer transfer = new Transfer(value, this.id, toAccountID);
         return Optional.of(transfer);
     }
 }

@@ -16,4 +16,5 @@ public interface IRepository<T, ID> {
     T save(ID id, T t);
 
     T deleteById(ID id);
+    void deleteAll();
 }

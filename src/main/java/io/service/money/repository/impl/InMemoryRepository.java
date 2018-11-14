@@ -39,4 +39,9 @@ abstract class InMemoryRepository<T, ID> implements IRepository<T, ID> {
     public T deleteById(ID id) {
         return memory.remove(id);
     }
+
+    @Override
+    public void deleteAll() {
+        memory.clear();
+    }
 }

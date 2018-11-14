@@ -24,7 +24,7 @@ public class TransferRouting implements IRouting {
         });
 
         rest.put("/transfer", ctx -> {
-            ctx.result(transferController.performTransfer(ctx));
+            ctx.result(transferController.computeTransfer(ctx));
         });
     }
 }

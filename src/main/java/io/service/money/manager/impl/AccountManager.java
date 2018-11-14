@@ -23,14 +23,8 @@ public class AccountManager implements IAccountManager {
 
     private final Map<String, Object> lockMap = new ConcurrentHashMap<>();
 
-    private IAccountStorage accountStorage;
-    private ITransferStorage transferStorage;
-
-    @Inject
-    public AccountManager(IAccountStorage accountStorage, ITransferStorage transferStorage) {
-        this.accountStorage = accountStorage;
-        this.transferStorage = transferStorage;
-    }
+    @Inject private IAccountStorage accountStorage;
+    @Inject private ITransferStorage transferStorage;
 
     public Optional<Account> transfer(Transfer transfer) {
         return transfer(transfer.getAmount(), transfer.getFromAccountID(), transfer.getToAccountID());
