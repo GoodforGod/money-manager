@@ -18,11 +18,11 @@ public class RestResponse<T> {
         this.t = t;
     }
 
-    private static <T> RestResponse<T> valid(T t) {
+    public static <T> RestResponse<T> valid(T t) {
         return new RestResponse<>(false, "", t);
     }
 
-    private static <T> RestResponse<T> error(String errorDetails) {
+    public static <T> RestResponse<T> error(String errorDetails) {
         return new RestResponse<>(true, errorDetails, null);
     }
 

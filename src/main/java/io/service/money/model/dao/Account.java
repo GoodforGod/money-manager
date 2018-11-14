@@ -15,8 +15,11 @@ public class Account extends BaseModel<String> {
     private final BigInteger balance;
 
     public Account() {
-        super(UUID.randomUUID().toString());
-        this.balance = BigInteger.valueOf(0);
+        this(BigInteger.valueOf(0));
+    }
+
+    public Account(long initialBalance) {
+        this(BigInteger.valueOf(initialBalance));
     }
 
     public Account(BigInteger initialBalance) {
@@ -35,7 +38,7 @@ public class Account extends BaseModel<String> {
     }
 
     public Optional<Transfer> transfer(long value, String toAccountID) {
-        if(balance.longValue() < value)
+        if (balance.longValue() < value)
             return Optional.empty();
 
         final Transfer transfer = new Transfer(balance.subtract(BigInteger.valueOf(value)).longValue(),

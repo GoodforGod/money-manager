@@ -1,9 +1,12 @@
-package io.service.money.manager;
+package io.service.money.manager.impl;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import io.service.money.manager.IAccountManager;
 import io.service.money.model.dao.Account;
 import io.service.money.model.dao.Transfer;
-import io.service.money.storage.impl.AccountStorage;
-import io.service.money.storage.impl.TransferStorage;
+import io.service.money.storage.IAccountStorage;
+import io.service.money.storage.ITransferStorage;
 
 import java.util.Map;
 import java.util.Optional;
@@ -15,12 +18,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author GoodforGod
  * @since 13.11.2018
  */
-public class AccountManager {
+@Singleton
+public class AccountManager implements IAccountManager {
 
     private final Map<String, Object> lockMap = new ConcurrentHashMap<>();
 
-    private AccountStorage accountStorage;
-    private TransferStorage transferStorage;
+    private IAccountStorage accountStorage;
+    private ITransferStorage transferStorage;
+
+    @Inject
+    public AccountManager(IAccountStorage accountStorage, ITransferStorage transferStorage) {
+        this.accountStorage = accountStorage;
+        this.transferStorage = transferStorage;
+    }
 
     public Optional<Account> transfer(Transfer transfer) {
         return transfer(transfer.getAmount(), transfer.getFromAccountID(), transfer.getToAccountID());
