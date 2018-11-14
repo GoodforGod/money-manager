@@ -13,6 +13,8 @@ import java.util.Optional;
  */
 public interface IStorage<T extends BaseModel<ID>, ID> {
 
+    boolean exist(ID id);
+
     Optional<T> find(ID id);
     List<T> findAll();
 

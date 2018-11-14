@@ -32,6 +32,11 @@ abstract class BasicStorage<T extends BaseModel<ID>, ID> implements IStorage<T, 
     }
 
     @Override
+    public boolean exist(ID id) {
+        return isIdValid(id) && find(id).isPresent();
+    }
+
+    @Override
     public Optional<T> find(ID id) {
         return (isIdValid(id))
                 ? Optional.ofNullable(repository.find(id))

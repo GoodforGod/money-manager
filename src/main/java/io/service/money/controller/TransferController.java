@@ -1,7 +1,9 @@
 package io.service.money.controller;
 
-import io.service.money.model.dto.AccountTO;
-import io.service.money.model.dto.TransferTO;
+import io.service.money.storage.impl.TransferStorage;
+
+import static spark.Spark.get;
+import static spark.Spark.post;
 
 /**
  * ! NO DESCRIPTION !
@@ -9,15 +11,22 @@ import io.service.money.model.dto.TransferTO;
  * @author GoodforGod
  * @since 13.11.2018
  */
-public class TransferController {
+public class TransferController extends BasicController {
 
-    public AccountTO transfer(long amount, String from, String to) {
+    private TransferStorage transferStorage;
 
-        return null;
-    }
+    public TransferController() {
+        get("/transfer/:id", (request, response) -> {
+            return "";
+        });
 
-    public AccountTO transfer(TransferTO transfer) {
+        // GET PARAMS
+        get("/transfer", (request, response) -> {
+            return "";
+        });
 
-        return null;
+        post("/transfer", (request, response) -> {
+            return "";
+        });
     }
 }

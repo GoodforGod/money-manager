@@ -1,8 +1,9 @@
 package io.service.money.controller;
 
-import io.service.money.model.dto.AccountTO;
+import io.service.money.storage.impl.AccountStorage;
 
-import java.math.BigInteger;
+import static spark.Spark.get;
+import static spark.Spark.put;
 
 /**
  * ! NO DESCRIPTION !
@@ -10,21 +11,22 @@ import java.math.BigInteger;
  * @author GoodforGod
  * @since 13.11.2018
  */
-public class AccountController {
+public class AccountController extends BasicController {
 
-    public BigInteger getBalance(String accountId) {
+    private AccountStorage accountStorage;
 
-        return null;
-    }
+    public AccountController() {
+        get("/account/balance/:id", (request, response) -> {
+            return "";
+        });
 
-    public AccountTO createAccount() {
+        put("/account", (request, response) -> {
+            return "";
+        });
 
-        return null;
-    }
-
-    // Assuming that client make a fiat deposit into bank
-    public AccountTO createAccount(BigInteger initialBalance) {
-
-        return null;
+        // Assuming that client make a fiat deposit into bank
+        put("/account/:deposit", (request, response) -> {
+            return "";
+        });
     }
 }
