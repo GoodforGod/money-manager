@@ -35,6 +35,12 @@ public class AccountManager implements IAccountManager {
         this.transferStorage = transferStorage;
     }
 
+    /**
+     * Operations on accounts are consistent ONLY when modifier by this method
+     *
+     * @param transfer to execute
+     * @return optional target account
+     */
     public Optional<Transfer> transfer(Transfer transfer) {
         return transfer(transfer.getAmount(), transfer.getFromAccountID(), transfer.getToAccountID());
     }
@@ -42,9 +48,9 @@ public class AccountManager implements IAccountManager {
     /**
      * Operations on accounts are consistent ONLY when modifier by this method
      *
-     * @param amount amount to transfer
+     * @param amount        amount to transfer
      * @param fromAccountID transfer from
-     * @param toAccountID transfer target
+     * @param toAccountID   transfer target
      * @return optional target account
      */
     public Optional<Transfer> transfer(long amount, String fromAccountID, String toAccountID) {
@@ -79,7 +85,7 @@ public class AccountManager implements IAccountManager {
         final Object fromLock = lockMap.get(fromID);
         final Object toLock = lockMap.get(toID);
 
-        if(fromLock == null && toLock == null) {
+        if (fromLock == null && toLock == null) {
             Object newLock = new Object();
             lockMap.put(fromID, newLock);
             lockMap.put(toID, newLock);

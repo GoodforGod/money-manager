@@ -12,7 +12,21 @@ import java.util.Optional;
  */
 public interface IAccountManager {
 
+    /**
+     * Operations on accounts are consistent ONLY when modifier by this method
+     *
+     * @param transfer to execute
+     * @return optional target account
+     */
     Optional<Transfer> transfer(Transfer transfer);
 
+    /**
+     * Operations on accounts are consistent ONLY when modifier by this method
+     *
+     * @param amount        amount to transfer
+     * @param fromAccountID transfer from
+     * @param toAccountID   transfer target
+     * @return optional target account
+     */
     Optional<Transfer> transfer(long amount, String fromAccountID, String toAccountID);
 }

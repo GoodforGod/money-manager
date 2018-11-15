@@ -1,4 +1,4 @@
-package io.service.money.support.config;
+package io.service.money.config;
 
 import com.google.gson.Gson;
 import com.google.inject.Guice;

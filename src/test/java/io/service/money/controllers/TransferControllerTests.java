@@ -1,10 +1,10 @@
 package io.service.money.controllers;
 
 import com.google.gson.reflect.TypeToken;
+import io.service.money.config.JavalinInjector;
 import io.service.money.model.dao.Account;
 import io.service.money.model.dao.Transfer;
 import io.service.money.model.dto.RestResponse;
-import io.service.money.support.config.JavalinInjector;
 import org.junit.Test;
 
 import java.io.IOException;
