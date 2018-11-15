@@ -15,16 +15,16 @@ import io.service.money.controller.AccountController;
 public class AccountRouting implements IRouting {
 
     @Inject private Javalin rest;
-    @Inject private AccountController accountController;
+    @Inject private AccountController controller;
 
     @Override
     public void handle() {
         rest.get("/account/:id", ctx -> {
-            ctx.result(accountController.getAccount(ctx));
+            ctx.contentType("application/json").result(controller.getAccount(ctx));
         });
 
-        rest.post("/account/create/:deposit", ctx -> {
-            ctx.result(accountController.createAccount(ctx));
+        rest.put("/account/create/:deposit", ctx -> {
+            ctx.contentType("application/json").result(controller.createAccount(ctx));
         });
     }
 }

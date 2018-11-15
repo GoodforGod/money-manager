@@ -10,12 +10,12 @@ public class RestResponse<T> {
 
     private boolean isError;
     private String errorDetails;
-    private T t;
+    private T result;
 
-    private RestResponse(boolean isError, String errorDetails, T t) {
+    private RestResponse(boolean isError, String errorDetails, T result) {
         this.isError = isError;
         this.errorDetails = errorDetails;
-        this.t = t;
+        this.result = result;
     }
 
     public static <T> RestResponse<T> valid(T t) {
@@ -34,7 +34,7 @@ public class RestResponse<T> {
         return errorDetails;
     }
 
-    public T getT() {
-        return t;
+    public T getResult() {
+        return result;
     }
 }

@@ -18,8 +18,12 @@ import java.util.Optional;
 @Singleton
 public class AccountController extends BasicController {
 
-    @Inject
     private IAccountStorage accountStorage;
+
+    @Inject
+    public AccountController(IAccountStorage accountStorage) {
+        this.accountStorage = accountStorage;
+    }
 
     public String getAccount(Context context) {
         final ParseBox parseBox = getPathParam("id", context);
@@ -34,7 +38,7 @@ public class AccountController extends BasicController {
 
     public String createAccount(Context context) {
         final ParseBox parseBox = getPathParam("deposit", context);
-        final long deposit = (parseBox.isEmpty()) ? parseLongOrZero(parseBox.getParam()) : 0;
+        final long deposit = parseLongOrZero(parseBox.getParam());
 
         final Optional<Account> account = accountStorage.save(new Account(deposit));
         return (account.isPresent())

@@ -1,4 +1,4 @@
-package io.service.money.subs;
+package io.service.money.support;
 
 import io.service.money.model.dao.Transfer;
 import io.service.money.repository.impl.TransferRepository;

@@ -2,7 +2,7 @@ package io.service.money;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import io.service.money.config.ServiceBindConfig;
+import io.service.money.support.config.ServiceBindConfig;
 
 /**
  * ! NO DESCRIPTION !

@@ -8,9 +8,9 @@ import io.service.money.model.dao.Transfer;
 import io.service.money.storage.IAccountStorage;
 import io.service.money.storage.ITransferStorage;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * ! NO DESCRIPTION !
@@ -21,7 +21,10 @@ import java.util.concurrent.ConcurrentMap;
 @Singleton
 public class AccountManager implements IAccountManager {
 
-    private final ConcurrentMap<String, Object> lockMap = new ConcurrentHashMap<>();
+    /**
+     * AccountID -> Lock (Similar lock for transferred accounts)
+     */
+    private final Map<String, Object> lockMap = new HashMap<>();
 
     private IAccountStorage accountStorage;
     private ITransferStorage transferStorage;
@@ -32,7 +35,7 @@ public class AccountManager implements IAccountManager {
         this.transferStorage = transferStorage;
     }
 
-    public Optional<Account> transfer(Transfer transfer) {
+    public Optional<Transfer> transfer(Transfer transfer) {
         return transfer(transfer.getAmount(), transfer.getFromAccountID(), transfer.getToAccountID());
     }
 
@@ -44,7 +47,7 @@ public class AccountManager implements IAccountManager {
      * @param toAccountID transfer target
      * @return optional target account
      */
-    public Optional<Account> transfer(long amount, String fromAccountID, String toAccountID) {
+    public Optional<Transfer> transfer(long amount, String fromAccountID, String toAccountID) {
         if (!accountStorage.exist(fromAccountID) || !accountStorage.exist(toAccountID) || amount < 1)
             return Optional.empty();
 
@@ -68,7 +71,7 @@ public class AccountManager implements IAccountManager {
             transferStorage.save(transfer.get());
 
             releaseLock(fromAccountID, toAccountID);
-            return accountTo;
+            return transfer;
         }
     }
 

@@ -15,16 +15,16 @@ import io.service.money.controller.TransferController;
 public class TransferRouting implements IRouting {
 
     @Inject private Javalin rest;
-    @Inject private TransferController transferController;
+    @Inject private TransferController controller;
 
     @Override
     public void handle() {
         rest.get("/transfer/:id", ctx -> {
-            ctx.result(transferController.getTransfer(ctx));
+            ctx.contentType("application/json").result(controller.getTransfer(ctx));
         });
 
         rest.put("/transfer", ctx -> {
-            ctx.result(transferController.computeTransfer(ctx));
+            ctx.contentType("application/json").result(controller.computeTransfer(ctx));
         });
     }
 }

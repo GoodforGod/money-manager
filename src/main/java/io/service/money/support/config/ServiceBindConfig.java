@@ -1,4 +1,4 @@
-package io.service.money.config;
+package io.service.money.support.config;
 
 import com.google.inject.AbstractModule;
 import io.service.money.manager.IAccountManager;

@@ -1,6 +1,5 @@
 package io.service.money.manager;
 
-import io.service.money.model.dao.Account;
 import io.service.money.model.dao.Transfer;
 
 import java.util.Optional;
@@ -13,7 +12,7 @@ import java.util.Optional;
  */
 public interface IAccountManager {
 
-    Optional<Account> transfer(Transfer transfer);
+    Optional<Transfer> transfer(Transfer transfer);
 
-    Optional<Account> transfer(long amount, String fromAccountID, String toAccountID);
+    Optional<Transfer> transfer(long amount, String fromAccountID, String toAccountID);
 }

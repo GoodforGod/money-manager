@@ -49,4 +49,11 @@ public abstract class BasicController {
                 : ParseBox.valid(param);
     }
 
+    ParseBox getQueryParam(String paramName, Context context) {
+        final String param = context.queryParam(paramName);
+        return (BasicUtils.isEmpty(param))
+                ? ParseBox.error(RestResponse.error(paramName + " param was not presented"))
+                : ParseBox.valid(param);
+    }
+
 }

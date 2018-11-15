@@ -5,7 +5,6 @@ import com.google.inject.Singleton;
 import io.javalin.Context;
 import io.service.money.manager.IAccountManager;
 import io.service.money.model.ParseBox;
-import io.service.money.model.dao.Account;
 import io.service.money.model.dao.Transfer;
 import io.service.money.storage.ITransferStorage;
 
@@ -22,8 +21,14 @@ import java.util.stream.Stream;
 @Singleton
 public class TransferController extends BasicController {
 
-    @Inject private ITransferStorage transferStorage;
-    @Inject private IAccountManager accountManager;
+    private ITransferStorage transferStorage;
+    private IAccountManager accountManager;
+
+    @Inject
+    public TransferController(ITransferStorage transferStorage, IAccountManager accountManager) {
+        this.transferStorage = transferStorage;
+        this.accountManager = accountManager;
+    }
 
     public String getTransfer(Context context) {
         final ParseBox parseBox = getPathParam("id", context);
@@ -37,9 +42,9 @@ public class TransferController extends BasicController {
     }
 
     public CompletableFuture<String> computeTransfer(Context context) {
-        final ParseBox parseBoxAmount = getPathParam("amount", context);
-        final ParseBox parseBoxFromID = getPathParam("fromAccountID", context);
-        final ParseBox parseBoxToID = getPathParam("toAccountID", context);
+        final ParseBox parseBoxAmount = getQueryParam("amount", context);
+        final ParseBox parseBoxFromID = getQueryParam("fromAccountID", context);
+        final ParseBox parseBoxToID = getQueryParam("toAccountID", context);
         final ParseBox errorParseBox = Stream.of(parseBoxAmount, parseBoxFromID, parseBoxToID)
                 .filter(ParseBox::isEmpty)
                 .findFirst()
@@ -54,7 +59,7 @@ public class TransferController extends BasicController {
 
         return CompletableFuture.supplyAsync(() -> {
             final Transfer transfer = new Transfer(amount, parseBoxFromID.getParam(), parseBoxToID.getParam());
-            final Optional<Account> transferCompleted = accountManager.transfer(transfer);
+            final Optional<Transfer> transferCompleted = accountManager.transfer(transfer);
             return (transferCompleted.isPresent())
                     ? validResponse(transferCompleted.get())
                     : errorResponse("Could not complete transfer");
