@@ -26,14 +26,14 @@ public class TransferStorage extends BasicStorage<Transfer, String> implements I
     @Override
     public List<Transfer> findBySender(String accountId) {
         return findAll().stream()
-                .filter(t -> t.getFromAccountID().equals(accountId))
+                .filter(t -> t.getSenderID().equals(accountId))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Transfer> findByRecipient(String accountId) {
         return findAll().stream()
-                .filter(t -> t.getToAccountID().equals(accountId))
+                .filter(t -> t.getReceiverID().equals(accountId))
                 .collect(Collectors.toList());
     }
 }

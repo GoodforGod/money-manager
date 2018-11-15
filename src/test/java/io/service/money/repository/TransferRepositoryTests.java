@@ -30,8 +30,8 @@ public class TransferRepositoryTests extends Assert {
         assertNotNull(saved);
         assertEquals(transfer.getId(), saved.getId());
         assertEquals(transfer.getAmount(), saved.getAmount());
-        assertEquals(transfer.getFromAccountID(), saved.getFromAccountID());
-        assertEquals(transfer.getToAccountID(), saved.getToAccountID());
+        assertEquals(transfer.getSenderID(), saved.getSenderID());
+        assertEquals(transfer.getReceiverID(), saved.getReceiverID());
     }
 
     @Test
@@ -44,8 +44,8 @@ public class TransferRepositoryTests extends Assert {
         assertNotNull(found);
         assertEquals(saved.getId(), found.getId());
         assertEquals(saved.getAmount(), found.getAmount());
-        assertEquals(saved.getFromAccountID(), found.getFromAccountID());
-        assertEquals(saved.getToAccountID(), found.getToAccountID());
+        assertEquals(saved.getSenderID(), found.getSenderID());
+        assertEquals(saved.getReceiverID(), found.getReceiverID());
     }
 
     @Test

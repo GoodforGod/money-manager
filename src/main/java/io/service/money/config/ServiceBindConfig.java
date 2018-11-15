@@ -1,8 +1,8 @@
 package io.service.money.config;
 
 import com.google.inject.AbstractModule;
-import io.service.money.manager.IAccountManager;
-import io.service.money.manager.impl.AccountManager;
+import io.service.money.manager.ITransferManager;
+import io.service.money.manager.impl.TransferManager;
 import io.service.money.storage.IAccountStorage;
 import io.service.money.storage.ITransferStorage;
 import io.service.money.storage.impl.AccountStorage;
@@ -20,7 +20,7 @@ public class ServiceBindConfig extends AbstractModule {
     protected void configure() {
         install(new ControllerBindConfig());
 
-        bind(IAccountManager.class).to(AccountManager.class);
+        bind(ITransferManager.class).to(TransferManager.class);
         bind(IAccountStorage.class).to(AccountStorage.class);
         bind(ITransferStorage.class).to(TransferStorage.class);
     }

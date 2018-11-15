@@ -1,6 +1,7 @@
 package io.service.money.manager;
 
-import io.service.money.manager.impl.AccountManager;
+import io.service.money.error.TransferException;
+import io.service.money.manager.impl.TransferManager;
 import io.service.money.model.dao.Account;
 import io.service.money.model.dao.Transfer;
 import io.service.money.repository.impl.AccountRepository;
@@ -24,67 +25,61 @@ import java.util.concurrent.CompletableFuture;
 public class AccountManagerTests extends Assert {
 
     private IAccountStorage accountStorage;
-
-    private AccountManager accountManager;
+    private ITransferManager transferManager;
 
     /**
-     * Same behavior but sleeps for 5 sec before transfer save
-     * (ONLY FOR TEST)
      * @see AwaitTransferStorage
      */
-    private AccountManager awaitAccountManager;
+    private ITransferManager awaitTransferManager;
 
     public AccountManagerTests() {
         TransferRepository transferRepository = new TransferRepository();
         this.accountStorage = new AccountStorage(new AccountRepository());
 
-        this.accountManager = new AccountManager(accountStorage, new TransferStorage(transferRepository));
-        this.awaitAccountManager = new AccountManager(accountStorage, new AwaitTransferStorage(transferRepository));
+        this.transferManager = new TransferManager(accountStorage, new TransferStorage(transferRepository));
+        this.awaitTransferManager = new TransferManager(accountStorage, new AwaitTransferStorage(transferRepository));
     }
 
     @Test
     public void validTransfer() {
-        Account accountFrom = new Account(100);
-        Account accountTo = new Account();
-        Transfer transfer = new Transfer(50, accountFrom.getId(), accountTo.getId());
-        Optional<Account> saveFrom = accountStorage.save(accountFrom);
-        Optional<Account> saveTo = accountStorage.save(accountTo);
-        assertTrue(saveFrom.isPresent());
-        assertTrue(saveTo.isPresent());
+        Account sender = new Account(100);
+        Account receiver = new Account();
+        Transfer transfer = new Transfer(50, sender.getId(), receiver.getId());
+        Optional<Account> savedSender = accountStorage.save(sender);
+        Optional<Account> saveReceiver = accountStorage.save(receiver);
+        assertTrue(savedSender.isPresent());
+        assertTrue(saveReceiver.isPresent());
 
-        Optional<Transfer> optionalTransfer = accountManager.transfer(transfer);
+        Transfer optionalTransfer = transferManager.transfer(transfer);
         assertNotNull(optionalTransfer);
-        assertTrue(optionalTransfer.isPresent());
-        assertEquals(50, optionalTransfer.get().getAmount());
-        assertEquals(accountFrom.getId(), optionalTransfer.get().getFromAccountID());
-        assertEquals(accountTo.getId(), optionalTransfer.get().getToAccountID());
+        assertEquals(50, optionalTransfer.getAmount());
+        assertEquals(sender.getId(), optionalTransfer.getSenderID());
+        assertEquals(receiver.getId(), optionalTransfer.getReceiverID());
     }
 
-    @Test
-    public void accountFromNotExist() {
-        Account accountTo = new Account();
-        Transfer transfer = new Transfer(50, "", accountTo.getId());
-        Optional<Account> saveTo = accountStorage.save(accountTo);
-        assertTrue(saveTo.isPresent());
+    @Test(expected = TransferException.class)
+    public void senderNotExist() {
+        Account receiver = new Account();
+        Transfer transfer = new Transfer(50, "1", receiver.getId());
+        Optional<Account> savedReceiver = accountStorage.save(receiver);
+        assertTrue(savedReceiver.isPresent());
 
-        Optional<Transfer> optionalTransfer = accountManager.transfer(transfer);
+        Transfer optionalTransfer = transferManager.transfer(transfer);
         assertNotNull(optionalTransfer);
-        assertFalse(optionalTransfer.isPresent());
     }
 
-    @Test
-    public void accountToNotExist() {
-        Account accountFrom = new Account(100);
-        Transfer transfer = new Transfer(50, accountFrom.getId(), "");
-        Optional<Account> saveFrom = accountStorage.save(accountFrom);
-        assertTrue(saveFrom.isPresent());
+    @Test(expected = TransferException.class)
+    public void receiverNotExist() {
+        Account sender = new Account(100);
+        Transfer transfer = new Transfer(50, sender.getId(), "1");
+        Optional<Account> savedSender = accountStorage.save(sender);
+        assertTrue(savedSender.isPresent());
 
-        Optional<Transfer> optionalTransfer = accountManager.transfer(transfer);
+        Transfer optionalTransfer = transferManager.transfer(transfer);
         assertNotNull(optionalTransfer);
-        assertFalse(optionalTransfer.isPresent());
     }
 
-    @Test
+    @Test(expected = TransferException.class)
     public void amountNotValid() {
         Account accountFrom = new Account(100);
         Account accountTo = new Account();
@@ -94,9 +89,8 @@ public class AccountManagerTests extends Assert {
         assertTrue(saveFrom.isPresent());
         assertTrue(saveTo.isPresent());
 
-        Optional<Transfer> optionalTransfer = accountManager.transfer(transfer);
+        Transfer optionalTransfer = transferManager.transfer(transfer);
         assertNotNull(optionalTransfer);
-        assertFalse(optionalTransfer.isPresent());
     }
 
     @Test
@@ -111,30 +105,28 @@ public class AccountManagerTests extends Assert {
         assertTrue(saveTo.isPresent());
 
         long start = System.currentTimeMillis();
-        CompletableFuture<Optional<Transfer>> futureFrom1to2 = CompletableFuture.supplyAsync(() ->
-                awaitAccountManager.transfer(transferFrom1to2));
-        CompletableFuture<Optional<Transfer>> futureFrom2to1 = CompletableFuture.supplyAsync(() ->
-                awaitAccountManager.transfer(transferFrom2to1));
-        Optional<Transfer> doneTransferFrom1to2 = futureFrom1to2.join();
-        Optional<Transfer> doneTransferFrom2to1 = futureFrom2to1.join();
+        CompletableFuture<Transfer> futureFrom1to2 = CompletableFuture.supplyAsync(() ->
+                awaitTransferManager.transfer(transferFrom1to2));
+        CompletableFuture<Transfer> futureFrom2to1 = CompletableFuture.supplyAsync(() ->
+                awaitTransferManager.transfer(transferFrom2to1));
+        Transfer doneTransferFrom1to2 = futureFrom1to2.join();
+        Transfer doneTransferFrom2to1 = futureFrom2to1.join();
         long end = System.currentTimeMillis();
 
-        // Due to 5 sec compute for transfer
+        // Due to 2 sec compute for transfer
         // Rough but suitable in this situation
         final long roundCycleInSec = Math.round((double) (end - start) / 1000);
-        assertEquals(10, roundCycleInSec);
+        assertEquals(4, roundCycleInSec);
 
         assertNotNull(doneTransferFrom1to2);
-        assertTrue(doneTransferFrom1to2.isPresent());
-        assertEquals(50, doneTransferFrom1to2.get().getAmount());
-        assertEquals(accountFrom.getId(), doneTransferFrom1to2.get().getFromAccountID());
-        assertEquals(accountTo.getId(), doneTransferFrom1to2.get().getToAccountID());
+        assertEquals(50, doneTransferFrom1to2.getAmount());
+        assertEquals(accountFrom.getId(), doneTransferFrom1to2.getSenderID());
+        assertEquals(accountTo.getId(), doneTransferFrom1to2.getReceiverID());
 
         assertNotNull(doneTransferFrom2to1);
-        assertTrue(doneTransferFrom2to1.isPresent());
-        assertEquals(150, doneTransferFrom2to1.get().getAmount());
-        assertEquals(accountTo.getId(), doneTransferFrom2to1.get().getFromAccountID());
-        assertEquals(accountFrom.getId(), doneTransferFrom2to1.get().getToAccountID());
+        assertEquals(150, doneTransferFrom2to1.getAmount());
+        assertEquals(accountTo.getId(), doneTransferFrom2to1.getSenderID());
+        assertEquals(accountFrom.getId(), doneTransferFrom2to1.getReceiverID());
 
         Optional<Account> account1 = accountStorage.find(accountFrom.getId());
         assertNotNull(account1);
@@ -162,30 +154,28 @@ public class AccountManagerTests extends Assert {
         assertTrue(saveTo.isPresent());
 
         long start = System.currentTimeMillis();
-        CompletableFuture<Optional<Transfer>> futureFrom1to2 = CompletableFuture.supplyAsync(() ->
-                awaitAccountManager.transfer(transferFrom1toTarget));
-        CompletableFuture<Optional<Transfer>> futureFrom2to1 = CompletableFuture.supplyAsync(() ->
-                awaitAccountManager.transfer(transferFrom2toTarget));
-        Optional<Transfer> transferFrom1to2 = futureFrom1to2.join();
-        Optional<Transfer> transferFrom2to1 = futureFrom2to1.join();
+        CompletableFuture<Transfer> futureFrom1to2 = CompletableFuture.supplyAsync(() ->
+                awaitTransferManager.transfer(transferFrom1toTarget));
+        CompletableFuture<Transfer> futureFrom2to1 = CompletableFuture.supplyAsync(() ->
+                awaitTransferManager.transfer(transferFrom2toTarget));
+        Transfer transferFrom1to2 = futureFrom1to2.join();
+        Transfer transferFrom2to1 = futureFrom2to1.join();
         long end = System.currentTimeMillis();
 
-        // Due to 5 sec compute for transfer
+        // Due to 2 sec compute for transfer
         // Rough but suitable in this situation
         final long roundCycleInSec = Math.round((double) (end - start) / 1000);
-        assertEquals(10, roundCycleInSec);
+        assertEquals(4, roundCycleInSec);
 
         assertNotNull(transferFrom1to2);
-        assertTrue(transferFrom1to2.isPresent());
-        assertEquals(50, transferFrom1to2.get().getAmount());
-        assertEquals(accountFrom.getId(), transferFrom1to2.get().getFromAccountID());
-        assertEquals(accountThirdParty.getId(), transferFrom1to2.get().getToAccountID());
+        assertEquals(50, transferFrom1to2.getAmount());
+        assertEquals(accountFrom.getId(), transferFrom1to2.getSenderID());
+        assertEquals(accountThirdParty.getId(), transferFrom1to2.getReceiverID());
 
         assertNotNull(transferFrom2to1);
-        assertTrue(transferFrom2to1.isPresent());
-        assertEquals(150, transferFrom2to1.get().getAmount());
-        assertEquals(accountFrom2.getId(), transferFrom2to1.get().getFromAccountID());
-        assertEquals(accountThirdParty.getId(), transferFrom2to1.get().getToAccountID());
+        assertEquals(150, transferFrom2to1.getAmount());
+        assertEquals(accountFrom2.getId(), transferFrom2to1.getSenderID());
+        assertEquals(accountThirdParty.getId(), transferFrom2to1.getReceiverID());
 
         Optional<Account> account1 = accountStorage.find(accountFrom.getId());
         assertNotNull(account1);

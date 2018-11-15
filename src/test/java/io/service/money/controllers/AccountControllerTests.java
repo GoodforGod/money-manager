@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * ! NO DESCRIPTION !
@@ -31,6 +32,27 @@ public class AccountControllerTests extends JavalinInjector {
         assertEquals(deposit, response.getResult().getBalance().longValue());
 
         return response.getResult();
+    }
+
+    @Test
+    public void getAllAccountsExist() throws IOException {
+        Account account1 = createAccount(100, executor, gson);
+        Account account2 = createAccount(100, executor, gson);
+
+        Type type = new TypeToken<RestResponse<List<Account>>>() {}.getType();
+
+        String json = executor.get(SERVER_HOST + "/account/all");
+        RestResponse<List<Account>> response = gson.fromJson(json, type);
+        assertNotNull(response);
+        assertFalse(response.isError());
+        assertTrue(response.getErrorDetails().isEmpty());
+        assertNotNull(response.getResult());
+        assertFalse(response.getResult().isEmpty());
+
+        boolean haveAccount1 = response.getResult().stream().anyMatch(a -> a.equals(account1));
+        boolean haveAccount2 = response.getResult().stream().anyMatch(a -> a.equals(account2));
+        assertTrue(haveAccount1);
+        assertTrue(haveAccount2);
     }
 
     @Test

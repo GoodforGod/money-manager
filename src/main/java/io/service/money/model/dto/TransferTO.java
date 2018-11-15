@@ -15,20 +15,20 @@ public class TransferTO {
     private LocalDateTime timestamp;
 
     private long amount;
-    private String fromAccountID;
-    private String toAccountID;
+    private String senderID;
+    private String receiverID;
 
-    private TransferTO(LocalDateTime timestamp, long amount, String fromAccountID, String toAccountID) {
+    private TransferTO(LocalDateTime timestamp, long amount, String senderID, String receiverID) {
         this.timestamp = timestamp;
         this.amount = amount;
-        this.fromAccountID = fromAccountID;
-        this.toAccountID = toAccountID;
+        this.senderID = senderID;
+        this.receiverID = receiverID;
     }
 
-    private static TransferTO of(Transfer t) {
+    public static TransferTO of(Transfer t) {
         return (t == null)
                 ? null
-                : new TransferTO(t.getTimestamp(), t.getAmount(), t.getFromAccountID(), t.getToAccountID());
+                : new TransferTO(t.getTimestamp(), t.getAmount(), t.getSenderID(), t.getReceiverID());
     }
 
     public LocalDateTime getTimestamp() {
@@ -39,11 +39,11 @@ public class TransferTO {
         return amount;
     }
 
-    public String getFromAccountID() {
-        return fromAccountID;
+    public String getSenderID() {
+        return senderID;
     }
 
-    public String getToAccountID() {
-        return toAccountID;
+    public String getReceiverID() {
+        return receiverID;
     }
 }

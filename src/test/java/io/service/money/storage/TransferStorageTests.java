@@ -35,8 +35,8 @@ public class TransferStorageTests extends Assert {
 
         assertEquals(transfer.getId(), saved.get().getId());
         assertEquals(transfer.getAmount(), saved.get().getAmount());
-        assertEquals(transfer.getFromAccountID(), saved.get().getFromAccountID());
-        assertEquals(transfer.getToAccountID(), saved.get().getToAccountID());
+        assertEquals(transfer.getSenderID(), saved.get().getSenderID());
+        assertEquals(transfer.getReceiverID(), saved.get().getReceiverID());
     }
 
     @Test
@@ -51,14 +51,14 @@ public class TransferStorageTests extends Assert {
         Transfer saved1 = saved.get(0);
         assertEquals(transfer1.getId(), saved1.getId());
         assertEquals(transfer1.getAmount(), saved1.getAmount());
-        assertEquals(transfer1.getFromAccountID(), saved1.getFromAccountID());
-        assertEquals(transfer1.getToAccountID(), saved1.getToAccountID());
+        assertEquals(transfer1.getSenderID(), saved1.getSenderID());
+        assertEquals(transfer1.getReceiverID(), saved1.getReceiverID());
 
         Transfer saved2 = saved.get(1);
         assertEquals(transfer2.getId(), saved2.getId());
         assertEquals(transfer2.getAmount(), saved2.getAmount());
-        assertEquals(transfer2.getFromAccountID(), saved2.getFromAccountID());
-        assertEquals(transfer2.getToAccountID(), saved2.getToAccountID());
+        assertEquals(transfer2.getSenderID(), saved2.getSenderID());
+        assertEquals(transfer2.getReceiverID(), saved2.getReceiverID());
     }
 
     @Test
@@ -72,8 +72,8 @@ public class TransferStorageTests extends Assert {
         assertNotNull(found);
         assertTrue(found.isPresent());
         assertEquals(transfer.getAmount(), saved.get().getAmount());
-        assertEquals(transfer.getFromAccountID(), saved.get().getFromAccountID());
-        assertEquals(transfer.getToAccountID(), saved.get().getToAccountID());
+        assertEquals(transfer.getSenderID(), saved.get().getSenderID());
+        assertEquals(transfer.getReceiverID(), saved.get().getReceiverID());
     }
 
     @Test

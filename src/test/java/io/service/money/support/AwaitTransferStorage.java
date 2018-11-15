@@ -7,7 +7,7 @@ import io.service.money.storage.impl.TransferStorage;
 import java.util.Optional;
 
 /**
- * ! NO DESCRIPTION !
+ * Same behavior but sleeps for 2 sec before transfer save to emulate computing
  *
  * @author GoodforGod
  * @since 15.11.2018
@@ -21,7 +21,7 @@ public class AwaitTransferStorage extends TransferStorage {
     @Override
     public Optional<Transfer> save(Transfer transfer) {
         try {
-            Thread.sleep(5000);
+            Thread.sleep(2000);
             return super.save(transfer);
         } catch (InterruptedException e) {
             return Optional.empty();

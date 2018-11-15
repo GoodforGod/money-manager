@@ -3,7 +3,8 @@ package io.service.money.controller;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.javalin.Context;
-import io.service.money.manager.IAccountManager;
+import io.service.money.error.TransferException;
+import io.service.money.manager.ITransferManager;
 import io.service.money.model.ParseBox;
 import io.service.money.model.dao.Transfer;
 import io.service.money.storage.ITransferStorage;
@@ -23,12 +24,12 @@ import java.util.stream.Stream;
 public class TransferController extends BasicController {
 
     private ITransferStorage transferStorage;
-    private IAccountManager accountManager;
+    private ITransferManager transferManager;
 
     @Inject
-    public TransferController(ITransferStorage transferStorage, IAccountManager accountManager) {
+    public TransferController(ITransferStorage transferStorage, ITransferManager transferManager) {
         this.transferStorage = transferStorage;
-        this.accountManager = accountManager;
+        this.transferManager = transferManager;
     }
 
     public String getAllTransfers(Context context) {
@@ -59,17 +60,19 @@ public class TransferController extends BasicController {
     /**
      * Url Parameters for PUT endpoint
      * "amount" - amount to send
-     * "fromAccountID" - sender account
-     * "toAccountID" - receiver account
+     * "senderID" - sender account
+     * "receiverID" - receiver account
+     *
+     * Example: /transfer?amount=10?senderID=1?receiverID=2
      *
      * @see io.service.money.model.dto.RestResponse
      * @return restResponse with transfer
      */
     public CompletableFuture<String> computeTransfer(Context context) {
         final ParseBox parseBoxAmount = getQueryParam("amount", context);
-        final ParseBox parseBoxFromID = getQueryParam("fromAccountID", context);
-        final ParseBox parseBoxToID = getQueryParam("toAccountID", context);
-        final ParseBox errorParseBox = Stream.of(parseBoxAmount, parseBoxFromID, parseBoxToID)
+        final ParseBox senderBox = getQueryParam("senderID", context);
+        final ParseBox receiverBox = getQueryParam("receiverID", context);
+        final ParseBox errorParseBox = Stream.of(parseBoxAmount, senderBox, receiverBox)
                 .filter(ParseBox::isEmpty)
                 .findFirst()
                 .orElse(null);
@@ -82,11 +85,12 @@ public class TransferController extends BasicController {
             return CompletableFuture.completedFuture(errorResponse("Incorrect transfer amount"));
 
         return CompletableFuture.supplyAsync(() -> {
-            final Transfer transfer = new Transfer(amount, parseBoxFromID.getParam(), parseBoxToID.getParam());
-            final Optional<Transfer> transferCompleted = accountManager.transfer(transfer);
-            return (transferCompleted.isPresent())
-                    ? validResponse(transferCompleted.get())
-                    : errorResponse("Could not complete transfer");
+            try {
+                final Transfer transfer = new Transfer(amount, senderBox.getParam(), receiverBox.getParam());
+                return validResponse(transferManager.transfer(transfer));
+            } catch (TransferException e) {
+                return errorResponse(e.getMessage());
+            }
         });
     }
 
