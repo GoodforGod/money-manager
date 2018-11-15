@@ -1,9 +1,9 @@
 FROM goodforgod/debian-jdk10-oracle:sid
 
 # Install curl & unzip
-RUN apt-get update && \
-    apt-get -y install curl && \
-    apt-get -y install unzip
+RUN apt-get -q update && \
+    apt-get -qy install curl && \
+    apt-get -qy install unzip
 
 # Install gradle
 RUN mkdir /opt/gradle && \

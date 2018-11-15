@@ -7,6 +7,7 @@ import io.service.money.model.ParseBox;
 import io.service.money.model.dao.Account;
 import io.service.money.storage.IAccountStorage;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,6 +26,20 @@ public class AccountController extends BasicController {
         this.accountStorage = accountStorage;
     }
 
+    public String getAllAccounts(Context context) {
+        final List<Account> all = accountStorage.findAll();
+        return (all.isEmpty())
+                ? errorResponse("No records found")
+                : validResponse(all);
+    }
+
+    /**
+     * Url Parameters for GET endpoint
+     * "id" - account id
+     *
+     * @see io.service.money.model.dto.RestResponse
+     * @return restResponse with account
+     */
     public String getAccount(Context context) {
         final ParseBox parseBox = getPathParam("id", context);
         if (parseBox.isEmpty())
@@ -36,6 +51,13 @@ public class AccountController extends BasicController {
                 : errorResponse("Account does not exist");
     }
 
+    /**
+     * Url Parameters for PUT endpoint
+     * "deposit" - initial balance
+     *
+     * @see io.service.money.model.dto.RestResponse
+     * @return restResponse with account
+     */
     public String createAccount(Context context) {
         final ParseBox parseBox = getPathParam("deposit", context);
         final long deposit = parseLongOrZero(parseBox.getParam());

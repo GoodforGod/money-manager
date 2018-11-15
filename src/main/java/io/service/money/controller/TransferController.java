@@ -8,6 +8,7 @@ import io.service.money.model.ParseBox;
 import io.service.money.model.dao.Transfer;
 import io.service.money.storage.ITransferStorage;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
@@ -30,6 +31,20 @@ public class TransferController extends BasicController {
         this.accountManager = accountManager;
     }
 
+    public String getAllTransfers(Context context) {
+        final List<Transfer> all = transferStorage.findAll();
+        return (all.isEmpty())
+                ? errorResponse("No records found")
+                : validResponse(all);
+    }
+
+    /**
+     * Url Parameters for GET endpoint
+     * "id" - transfer id
+     *
+     * @see io.service.money.model.dto.RestResponse
+     * @return restResponse with transfer
+     */
     public String getTransfer(Context context) {
         final ParseBox parseBox = getPathParam("id", context);
         if (parseBox.isEmpty())
@@ -41,6 +56,15 @@ public class TransferController extends BasicController {
                 : validResponse(transfer.get());
     }
 
+    /**
+     * Url Parameters for PUT endpoint
+     * "amount" - amount to send
+     * "fromAccountID" - sender account
+     * "toAccountID" - receiver account
+     *
+     * @see io.service.money.model.dto.RestResponse
+     * @return restResponse with transfer
+     */
     public CompletableFuture<String> computeTransfer(Context context) {
         final ParseBox parseBoxAmount = getQueryParam("amount", context);
         final ParseBox parseBoxFromID = getQueryParam("fromAccountID", context);

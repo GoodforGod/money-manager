@@ -19,6 +19,10 @@ public class AccountRouting implements IRouting {
 
     @Override
     public void handle() {
+        rest.get("/account/all", ctx -> {
+            ctx.contentType("application/json").result(controller.getAllAccounts(ctx));
+        });
+
         rest.get("/account/:id", ctx -> {
             ctx.contentType("application/json").result(controller.getAccount(ctx));
         });

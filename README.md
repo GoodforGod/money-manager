@@ -1,5 +1,7 @@
 # Money Manager
 
+![travis](https://travis-ci.org/GoodforGod/money-manager.svg?branch=master)
+
 Guice & Javalin simple money manager application. Allow transfers between accounts.
 
 ### Dependencies:

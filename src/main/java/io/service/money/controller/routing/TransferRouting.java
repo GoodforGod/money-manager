@@ -19,6 +19,10 @@ public class TransferRouting implements IRouting {
 
     @Override
     public void handle() {
+        rest.get("/transfer/all", ctx -> {
+            ctx.contentType("application/json").result(controller.getAllTransfers(ctx));
+        });
+
         rest.get("/transfer/:id", ctx -> {
             ctx.contentType("application/json").result(controller.getTransfer(ctx));
         });
