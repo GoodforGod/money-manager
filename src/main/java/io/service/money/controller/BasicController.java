@@ -6,8 +6,8 @@ import io.javalin.Context;
 import io.service.money.model.ParseBox;
 import io.service.money.model.dto.RestResponse;
 import io.service.money.util.BasicUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.logging.Logger;
 
 /**
  * ! NO DESCRIPTION !
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BasicController {
 
-    final Logger logger = LoggerFactory.getLogger(BasicController.class);
+    final Logger logger = java.util.logging.Logger.getLogger(BasicController.class.getName());
 
     private Gson gson = new Gson();
 
@@ -25,7 +25,7 @@ public abstract class BasicController {
         try {
             return gson.fromJson(json, tClass);
         } catch (JsonSyntaxException e) {
-            logger.warn(e.getMessage());
+            logger.warning(e.getMessage());
             return null;
         }
     }
