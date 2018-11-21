@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface ITransferStorage extends IStorage<Transfer, String> {
 
-    // Yeah better to do same into TransferRepository, assume that its there
+    // Its better to do same into TransferRepository, assume that its there
     List<Transfer> findBySender(String accountId);
     List<Transfer> findByRecipient(String accountId);
 }

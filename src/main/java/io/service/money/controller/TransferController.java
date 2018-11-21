@@ -63,7 +63,7 @@ public class TransferController extends BasicController {
      * "senderID" - sender account
      * "receiverID" - receiver account
      *
-     * Example: /transfer?amount=10?senderID=1?receiverID=2
+     * Example: /transfer?amount=10&senderID=1&receiverID=2
      *
      * @see io.service.money.model.dto.RestResponse
      * @return restResponse with transfer

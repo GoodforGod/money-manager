@@ -6,7 +6,7 @@ import io.javalin.Javalin;
 import io.service.money.controller.TransferController;
 
 /**
- * ! NO DESCRIPTION !
+ * @see TransferController
  *
  * @author GoodforGod
  * @since 14.11.2018
@@ -27,6 +27,7 @@ public class TransferRouting implements IRouting {
             ctx.contentType("application/json").result(controller.getTransfer(ctx));
         });
 
+        // Example: /transfer?amount=10&senderID=1&receiverID=2
         rest.put("/transfer", ctx -> {
             ctx.contentType("application/json").result(controller.computeTransfer(ctx));
         });

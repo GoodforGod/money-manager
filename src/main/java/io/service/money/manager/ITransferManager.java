@@ -12,7 +12,7 @@ import io.service.money.model.dao.Transfer;
 public interface ITransferManager {
 
     /**
-     * Operations on accounts are consistent ONLY when modifier by this method
+     * Operations on accounts are consistent ONLY when modified by this method
      *
      * @param transfer to execute
      * @return transfer details
@@ -20,7 +20,7 @@ public interface ITransferManager {
     Transfer transfer(Transfer transfer) throws TransferException;
 
     /**
-     * Operations on accounts are consistent ONLY when modifier by this method
+     * Operations on accounts are consistent ONLY when modified by this method
      *
      * @param amount     amount to transfer
      * @param senderID   transfer from

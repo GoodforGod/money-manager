@@ -6,7 +6,7 @@ import io.javalin.Javalin;
 import io.service.money.controller.AccountController;
 
 /**
- * ! NO DESCRIPTION !
+ * @see AccountController
  *
  * @author GoodforGod
  * @since 14.11.2018

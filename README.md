@@ -21,13 +21,12 @@ handles accounts details and their creation.
 handles transfers between accounts and details about transfers.
 * (GET) /transfer/all - Return all transfers
 * (GET) /transfer/:id - Details about transfer
-* (PUT) /transfer - Transfer money between accounts
+* (PUT) /transfer - Transfer money between accounts (url params - &amount &senderID &receiverID)
 
 ### Execute 
 Locally using *Gradle & JDK*
 ```bash
 > gradle build
-
 > java -jar money-manager-all-1.0.0.jar
 ```
 
