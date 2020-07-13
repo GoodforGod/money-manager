@@ -1,8 +1,8 @@
-# Money Manager
+# Revolut Test Task Money Manager
 
 ![travis](https://travis-ci.org/GoodforGod/money-manager.svg?branch=master)
 
-Simple money transfer application with Guice & Javalin. Allow transfer money between accounts.
+Simple money transfer application with Guice & Javalin. Was developed as test task for Revolut in end of 2018 for Middle\Senior Developer position. Was successfully accepted.
 
 ### Dependencies:
 * Guice
